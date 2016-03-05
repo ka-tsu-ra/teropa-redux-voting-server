@@ -36,6 +36,48 @@ describe('application logic', () => {
         entries: List.of('Sunshine')
       }));
     });
+    // the way the logic is designed, when a movie wins a vote against another one, it goes
+    // back into the list of entries so people can vote on it against another one later.
+    // the moive that loses a vote is discarded, not put back in the list.
+    it('puts the winner of the current vote to the back of the entries', () => {
+      const state = Map({
+        entries: List.of('Sunshine', 'Millions', '127 Hours'),
+        vote: Map({
+          pair: List.of('Trainspotting', '28 Days Later'),
+          tally: Map({
+            'Trainspotting': 3,
+            '28 Days Later': 2
+          }),
+        })  
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Sunshine', 'Millions'),
+        }),
+        entries: List.of('127 Hours', 'Trainspotting')
+      }));
+    });
+
+    it('puts both movies from a tied vote back into the entries', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Trainspotting', '28 Days Later'),
+            tally: Map({
+              'Trainspotting': 3,
+              '28 Days Later': 3
+            })
+        }),
+        entries: List.of('Sunshine', 'Millions', '127 Hours')
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Sunshine', 'Millions')
+        }),
+        entries: List.of('127 Hours', 'Trainspotting', '28 Days Later')
+      }));
+    });     
   });
 
   describe('vote', () => {
