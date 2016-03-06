@@ -28,6 +28,26 @@ describe('reducer', () => {
       entries: []
     }));
   });
+
+  it('handles the VOTE action', () => {
+    const currentState = fromJS({
+      entries: [],
+      vote: {
+        pair: ['Trainspotting', '28 Days Later']
+      }
+    });
+    const action = { type: 'VOTE', entry: 'Trainspotting' };
+    const nextState = reducer(currentState, action);
+
+    expect(nextState).to.equal(fromJS({
+      entries: [],
+      vote: {
+        pair: ['Trainspotting', '28 Days Later'],
+        tally: { Trainspotting: 1 }
+    // NB also works with quotation marks - tally: { 'Trainspotting': 1}
+      }
+    }));
+  });
 });
 
 
