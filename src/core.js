@@ -2,7 +2,6 @@ import {List, Map} from 'immutable';
 
 export const INITIAL_STATE = Map();
 
-// return the result of setting state with an immutable List structure made out of whatever is passed in as entries
 export function setEntries (state, entries) {
   return state.set('entries', List(entries));
 }
@@ -22,11 +21,14 @@ export function next(state) {
   }
 }
 
-// updateIn here: reach into the nested data structure path ['vote', 'tally', 'Trainspotting'] and apply this function there.
-// If the keys are missing along the path, create new Maps in their place. If the value at the end is missing, initialize it with 0.
-export function vote(state, entry) {
-  return state.updateIn(
-    ['vote', 'tally', entry],
+// Only need to update the part of the state that has to do with the tally.
+// Leave the rest of the state Map out of it. Saying voteState as the arg instead of
+// state makes that more obvious. Reducer fn has to update that part of the state and make it 
+// equal to the outcome of this function when you pass it the right part of the state, i.e. the voteState.
+// NB if the value at the end is missing, this initialises it with 0.
+export function vote(voteState, entry) {
+  return voteState.updateIn(
+    ['tally', entry],
     0,
     tally => tally + 1
   );

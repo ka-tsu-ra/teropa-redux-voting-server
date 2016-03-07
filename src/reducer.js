@@ -7,7 +7,10 @@ export default function reducer(state = INITIAL_STATE, action) {
     case 'NEXT':
       return next(state);
     case 'VOTE':
-      return vote(state, action.entry)
+      // Update will return a new map having udpated the value at the key you give - i.e. 'vote'
+      // So will only work on that part of the map and just copy the rest of it.
+      return state.update('vote',
+                          voteState => vote(voteState, action.entry));
+    }
     return state;
-  }
 }
