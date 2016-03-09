@@ -23,6 +23,11 @@ export default function startServer(store) {
 // Plus server should give clients the current state immediately when thye connect to the app. Then they can sync their client-side state with the latest server-side state straight away.
 // This listens for connection event and emits the state when that happens.
   io.on('connection', (socket) => {
-    socket.emit('state', store.getState().toJS()
+    socket.emit('state', store.getState().toJS();
+
+// If a client emits an 'action' to the server, the server hands the action to the Redux store. This lets client actions be fed directly into the Redux store, so they can be received to update state.
+// Realworld security - this lets any connected Socket.io clienet dispatch any action to the Redux store. 
+
+    socket.on('action', store.dispatch.bind(store));
   }
 }
